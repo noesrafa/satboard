@@ -45,6 +45,8 @@
   display: flex;
   margin-top: 8px;
   margin-left: 40px;
+  max-width: calc(100vw - 24px);
+  overflow-x: auto;
 }
 
 .generator-options button {
@@ -55,9 +57,21 @@
   display: flex;
   align-items: center;
   gap: 4px;
+  white-space: nowrap !important;
 }
 
 .generator-options button:hover {
   color: white;
   background: #ffffff0e;
+}
+
+@media (max-width: 768px) {
+  .generator-options {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  ::placeholder {
+    font-size: 14px;
+  }
 }

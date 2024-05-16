@@ -1,21 +1,84 @@
 const generator_options_container =
   document.querySelector(".generator-options");
+const generator_input = document.querySelector("#generator-input");
+
+const OPTIONS_KEYS = {
+  SALARIED_TYPE: "salaried_type",
+  REGIME: "regime",
+  PERIODICITY: "periodicity",
+};
+
+const SALARIED_TYPES = {
+  BRUTO: "Sueldo bruto",
+  NETO: "Sueldo neto",
+};
+
+const REGIMES = {
+  SYS: "Sueldos y Salarios",
+  HONORARIOS: "Honorarios",
+};
+
+const PERIODICITIES = {
+  MENSUAL: "Mensual",
+  QUINCENAL: "Quincenal",
+  SEMANAL: "Semanal",
+  DIA: "Día",
+};
+
+let salaried_type =
+  localStorage.getItem("salaried_type") || SALARIED_TYPES.BRUTO;
+let regime = localStorage.getItem("regime") || REGIMES.SYS;
+let periodicity = localStorage.getItem("periodicity") || PERIODICITIES.MENSUAL;
+
+const generator_options_list = [
+  {
+    label: regime,
+    value: "regime",
+    type: "selector",
+  },
+  {
+    label: periodicity,
+    value: "periodicity",
+    type: "selector",
+  },
+  {
+    label: "Sueldo Bruto",
+    value: "salaried_type",
+    type: "toggle",
+  },
+];
+
+const handleOptionAction = (option, element) => {
+  switch (option.value) {
+    case OPTIONS_KEYS.PERIODICITY:
+      break;
+    case OPTIONS_KEYS.REGIME:
+      break;
+    case OPTIONS_KEYS.SALARIED_TYPE:
+      salaried_type = localStorage.getItem(OPTIONS_KEYS.SALARIED_TYPE);
+
+      localStorage.setItem(
+        OPTIONS_KEYS.SALARIED_TYPE,
+        salaried_type === SALARIED_TYPES.BRUTO
+          ? SALARIED_TYPES.NETO
+          : SALARIED_TYPES.BRUTO
+      );
+      element.querySelector("img").src =
+        salaried_type === SALARIED_TYPES.BRUTO
+          ? `./assets/checked.svg`
+          : `./assets/unchecked.svg`;
+
+      // change placeholder of generator input
+      generator_input.placeholder = `Escribe el sueldo ${
+        salaried_type === SALARIED_TYPES.BRUTO ? "bruto" : "NETO"
+      } del empleado`;
+      break;
+    default:
+      break;
+  }
+};
 
 document.addEventListener("DOMContentLoaded", () => {
-  const generator_options_list = [
-    {
-      label: "SyS",
-      value: "regime",
-    },
-    {
-      label: "Sueldo bruto",
-      value: "type",
-    },
-    {
-      label: "Mes",
-      value: "period",
-    },
-  ];
   generator_options_list.forEach((option) => {
     const option_button = document.createElement("button");
     option_button.classList.add("generator-option");
@@ -23,12 +86,21 @@ document.addEventListener("DOMContentLoaded", () => {
     option_button.value = option.value;
 
     const option_button_icon = document.createElement("img");
-    option_button_icon.src = `./assets/caret-down.svg`;
-    option_button_icon.alt = "Caret down";
-    option_button_icon.classList.add("generator-option-icon");
+
+    if (option.type === "selector") {
+      option_button_icon.src = `./assets/caret-down.svg`;
+      option_button_icon.alt = "Caret down";
+    } else {
+      option_button_icon.src =
+        salaried_type === SALARIED_TYPES.BRUTO
+          ? `./assets/unchecked.svg`
+          : `./assets/checked.svg`;
+
+      option_button_icon.alt = "checked";
+    }
 
     option_button.addEventListener("click", function () {
-      console.log(option.value);
+      handleOptionAction(option, option_button);
     });
 
     option_button.appendChild(option_button_icon);
