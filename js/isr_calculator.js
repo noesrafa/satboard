@@ -80,6 +80,9 @@ const handleOptionAction = (option, element) => {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+  const generatorContainer = document.querySelector(".generator-container");
+  const generatorResult = document.querySelector(".generator-result");
+
   generator_input.placeholder = `Escribe el sueldo ${
     salaried_type === SALARIED_TYPES.BRUTO ? "NETO" : "BRUTO"
   } del empleado`;
@@ -110,5 +113,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
     option_button.appendChild(option_button_icon);
     generator_options_container.appendChild(option_button);
+  });
+
+  // ========= CALCULATE ISR =========== //
+  const salaryForm = document.querySelector("#salary-form");
+
+  salaryForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    generatorContainer.classList.add("hidden");
+    generatorResult.classList.remove("hidden");
+  });
+
+  // ========= DOWNLOAD RESULT =========== //
+  const downloadButton = document.querySelector("#download-png");
+
+  document.addEventListener("DOMContentLoaded", () => {
+    downloadButton.addEventListener("click", () => {
+      htmlToImage.toPng(generatorResult).then(function (dataUrl) {
+        download(dataUrl, "isr_result.png");
+      });
+    });
+  });
+
+  // ========= RESET =========== //
+  const resetButton = document.querySelector("#reset");
+
+  resetButton.addEventListener("click", () => {
+    generatorContainer.classList.remove("hidden");
+    generatorResult.classList.add("hidden");
   });
 });

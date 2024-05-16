@@ -4,6 +4,10 @@ const sidemenu = document.querySelector(".sidemenu");
 const sidemenu_nav = document.querySelector(".sidemenu-nav__options");
 const sidemenu_toggle = document.querySelectorAll(".sidemenu-toggle");
 
+const isMobile = window.matchMedia(
+  "only screen and (max-width: 760px)"
+).matches;
+
 const options_nav = [
   {
     label: "Calculadora ISR",
@@ -46,4 +50,23 @@ sidemenu_toggle.forEach((toggle) => {
       toggle.classList.toggle("active");
     });
   });
+});
+
+document.addEventListener("click", (e) => {
+  if (
+    sidemenu_toggle[0].contains(e.target) ||
+    sidemenu_toggle[1].contains(e.target)
+  )
+    return;
+
+  if (
+    !sidemenu.contains(e.target) &&
+    !sidemenu_toggle[0].contains(e.target) &&
+    isMobile
+  ) {
+    sidemenu_toggle[0].classList.remove("active");
+    sidemenu_toggle[1].classList.add("active");
+    main.classList.add("full");
+    sidemenu.classList.remove("active");
+  }
 });
