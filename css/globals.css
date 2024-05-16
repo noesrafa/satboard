@@ -17,6 +17,10 @@
   --transparent-md: #ffffff0e;
 }
 
+html {
+  height: -webkit-fill-available;
+}
+
 body {
   background-color: var(--bg-color);
   color: white;
@@ -185,7 +189,9 @@ input:checked + .slider:before {
 
 .main {
   flex: 1;
-  height: 100vh;
+  min-height: -webkit-fill-available;
+  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -213,5 +219,6 @@ input:checked + .slider:before {
   .main {
     padding: 0 12px;
     margin-left: 0;
+    height: auto;
   }
 }

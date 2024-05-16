@@ -67,8 +67,9 @@
 
 @media (max-width: 768px) {
   .generator-options {
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 0;
+    width: 100%;
+    justify-content: center;
   }
 
   ::placeholder {

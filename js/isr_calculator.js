@@ -42,7 +42,7 @@ const generator_options_list = [
     type: "selector",
   },
   {
-    label: "Sueldo Bruto",
+    label: "Sueldo BRUTO",
     value: "salaried_type",
     type: "toggle",
   },
@@ -68,10 +68,11 @@ const handleOptionAction = (option, element) => {
           ? `./assets/checked.svg`
           : `./assets/unchecked.svg`;
 
-      // change placeholder of generator input
       generator_input.placeholder = `Escribe el sueldo ${
-        salaried_type === SALARIED_TYPES.BRUTO ? "bruto" : "NETO"
+        salaried_type === SALARIED_TYPES.BRUTO ? "BRUTO" : "NETO"
       } del empleado`;
+
+      console.log(salaried_type);
       break;
     default:
       break;
@@ -79,6 +80,10 @@ const handleOptionAction = (option, element) => {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+  generator_input.placeholder = `Escribe el sueldo ${
+    salaried_type === SALARIED_TYPES.BRUTO ? "NETO" : "BRUTO"
+  } del empleado`;
+
   generator_options_list.forEach((option) => {
     const option_button = document.createElement("button");
     option_button.classList.add("generator-option");
