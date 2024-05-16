@@ -10,17 +10,38 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Satboard</title>
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./css/globals.css" />
+    <link rel="stylesheet" href="./css/isr_calculator.css" />
   </head>
   <body>
-    <aside class="sidemenu"></aside>
+    <aside class="sidemenu active">
+      <button class="sidemenu-toggle active">
+        <img src="./assets/menu.svg" alt="close" />
+      </button>
+      <nav class="sidemenu-nav">
+        <h2>Herramientas</h2>
+        <ul class="sidemenu-nav__options"></ul>
+      </nav>
+    </aside>
     <main class="main">
-      <div class="input-quantity">
+      <header class="main-header">
+        <button class="sidemenu-toggle">
+          <img src="./assets/menu.svg" alt="close" />
+        </button>
+      </header>
+      <section class="generator-container">
+        <div class="input-quantity">
           <img src="./assets/money.svg" alt="money" />
-          <input type="text" placeholder="Escribe el sueldo bruto del empleado"/>
+          <input
+            type="text"
+            placeholder="Escribe el sueldo bruto del empleado"
+          />
           <img src="./assets/arrow-right.svg" alt="arrow" />
-      </div>
+        </div>
+        <div class="generator-options"></div>
+      </section>
     </main>
     <script src="./js/main.js"></script>
+    <script src="./js/isr_calculator.js"></script>
   </body>
 </html>

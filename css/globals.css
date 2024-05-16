@@ -1,0 +1,154 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "DM Sans", sans-serif;
+}
+
+:root {
+  --primary-color: #c9f5a6;
+  --text-secondary-color: #668079;
+  --secondary-color: #000;
+  --bg-color: #002c1f;
+  --accent-color: #00261b;
+
+  --max-w-md: 768px;
+
+  --transparent-md: #ffffff0e;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: white;
+  display: flex;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: white;
+  font-size: 14px;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+}
+
+::placeholder {
+  color: white;
+  opacity: 0.4;
+}
+
+::-ms-input-placeholder {
+  /* Edge 12 -18 */
+  color: white;
+  opacity: 0.4;
+}
+
+/* ========== SIDEMENU ========= */
+
+.sidemenu {
+  width: 300px;
+  background: var(--accent-color);
+  height: 100vh;
+  padding: 16px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  transform: translateX(-100%);
+  transition: 250ms;
+  z-index: 100;
+}
+
+.sidemenu.active {
+  transform: translateX(0) !important;
+}
+
+.sidemenu-toggle {
+  opacity: 0;
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 150ms;
+}
+
+.sidemenu-toggle:hover {
+  background: var(--transparent-md);
+}
+
+.sidemenu-toggle.active {
+  opacity: 1;
+}
+
+.sidemenu-nav {
+  margin-top: 42px;
+}
+
+.sidemenu-nav h2 {
+  font-size: 12px;
+  font-weight: 400;
+  opacity: 0.6;
+  margin-bottom: 10px;
+}
+
+.sidemenu-nav ul {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidemenu-nav ul a {
+  display: flex;
+  padding: 10px 16px;
+  border-radius: 8px;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.sidemenu-nav ul a.active {
+  background: var(--transparent-md);
+}
+
+/* ============ MAIN ============  */
+
+.main {
+  flex: 1;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 24px;
+  margin-left: 300px;
+  transition: 250ms;
+  position: relative;
+}
+
+.main.full {
+  margin-left: 0;
+}
+
+.main-header {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+}
+
+@media screen and (max-width: 768px) {
+  .sidemenu-toggle {
+    opacity: 1;
+  }
+
+  .main {
+    padding: 0 12px;
+    margin-left: 0;
+  }
+}
