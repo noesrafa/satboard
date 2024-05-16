@@ -72,8 +72,9 @@
 
 @media (max-width: 768px) {
   .generator-options {
-    margin-left: 0;
-    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: calc(100vw - 50px);
     justify-content: center;
   }
 
@@ -92,6 +93,10 @@
   background: var(--bg-color);
   padding: 8px;
   border-radius: 12px;
+}
+
+.generator-result br {
+  display: none;
 }
 
 .generator-result input {
@@ -143,8 +148,18 @@
 }
 
 @media (max-width: 768px) {
+  .generator-result input {
+    font-size: 32px;
+  }
+  .generator-result_options {
+    flex-direction: column;
+    gap: 12px;
+  }
   .generator-result_options button {
     width: 100% !important;
+  }
+  .generator-result br {
+    display: block;
   }
 }
 

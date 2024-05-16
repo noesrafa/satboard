@@ -128,11 +128,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // ========= DOWNLOAD RESULT =========== //
   const downloadButton = document.querySelector("#download-png");
 
-  document.addEventListener("DOMContentLoaded", () => {
-    downloadButton.addEventListener("click", () => {
-      htmlToImage.toPng(generatorResult).then(function (dataUrl) {
-        download(dataUrl, "isr_result.png");
-      });
+  downloadButton.addEventListener("click", () => {
+    console.log("download");
+
+    htmlToImage.toPng(generatorResult).then(function (dataUrl) {
+      download(dataUrl, "isr_result.png");
     });
   });
 
