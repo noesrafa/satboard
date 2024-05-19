@@ -100,12 +100,17 @@
 .generator-result {
   width: 100%;
   max-width: var(--max-w-sm);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  
+}
+
+.generator-result__data {
   background: var(--bg-color);
   padding: 16px;
   border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
 }
 
 .generator-result br {
@@ -159,6 +164,7 @@
   gap: 12px;
   margin-top: 40px;
   justify-content: center;
+  padding: 0 16px;
 }
 
 .generator-result_options button {

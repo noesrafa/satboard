@@ -69,12 +69,13 @@ const handleOptionAction = (option, element) => {
   document
     .querySelectorAll(".dropdown")
     .forEach((dropdown) => dropdown.remove());
-  createDropdown(element, option);
 
   switch (option.value) {
     case OPTIONS_KEYS.PERIODICITY:
+      createDropdown(element, option);
       break;
     case OPTIONS_KEYS.REGIME:
+      createDropdown(element, option);
       break;
     case OPTIONS_KEYS.SALARIED_TYPE:
       salaried_type = localStorage.getItem(OPTIONS_KEYS.SALARIED_TYPE);
@@ -145,9 +146,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!generator_input.value || generator_input.value === "0") {
       const error = document.createElement("p");
       error.classList.add("error");
-      error.innerText = "Ingresa un sueldo";
+      error.innerText = "Ingresa un sueldo válido";
       salaryForm.appendChild(error);
-      // input add error class
       salaryForm.classList.add("error");
 
       setTimeout(() => {
@@ -165,11 +165,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ========= DOWNLOAD RESULT =========== //
   const downloadButton = document.querySelector("#download-png");
+  const resultToDownload = document.querySelector(".generator-result__data")
 
   downloadButton.addEventListener("click", () => {
-    console.log("download");
-
-    htmlToImage.toPng(generatorResult).then(function (dataUrl) {
+    htmlToImage.toPng(resultToDownload).then(function (dataUrl) {
       download(dataUrl, "isr_result.png");
     });
   });
@@ -221,8 +220,6 @@ document.addEventListener("DOMContentLoaded", () => {
         base = salary_number - limit.inferior_limit;
         marginal_tax = base * (limit.percentage / 100);
         total_isr = marginal_tax + limit.fixed_fee;
-
-        console.log(base);
 
         element_salary.innerText = `${formatCurrency(salary_number)}`;
         result_total_isr.innerText = `- ${formatCurrency(total_isr)}`;

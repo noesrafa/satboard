@@ -47,24 +47,27 @@
       </section>
 
       <section class="generator-result hidden">
-        <input type="text" placeholder="Nombre del cliente" />
-        <p>Sueldo bruto <span id="result_salary">$ 10,000.00</span></p>
-        <p>Total ISR <span id="result_total_isr">- $ 770.90</span></p>
-        <div class="generator-detail">
-          <img src="./assets/detail-line.svg" alt="detail line" />
-          <div>
-            <p id="result_taxes_container">
-              Impuesto marginal <br />
-              ($3,667.95 x 10.88%) <span id="result_marginal_tax">$399.07</span>
-            </p>
-            <p>Cuota fija <span id="result_fixed_fee">$371.83</span></p>
+        <div class="generator-result__data">
+          <input type="text" placeholder="Nombre del cliente" />
+          <p>Sueldo bruto <span id="result_salary">$ 10,000.00</span></p>
+          <p>Total ISR <span id="result_total_isr">- $ 770.90</span></p>
+          <div class="generator-detail">
+            <img src="./assets/detail-line.svg" alt="detail line" />
+            <div>
+              <p id="result_taxes_container">
+                Impuesto marginal <br />
+                ($3,667.95 x 10.88%)
+                <span id="result_marginal_tax">$399.07</span>
+              </p>
+              <p>Cuota fija <span id="result_fixed_fee">$371.83</span></p>
+            </div>
           </div>
+          <hr />
+          <p id="result_total_container">
+            Ingreso NETO <br />
+            ($10,000.00 - $770.00) <span id="result_total">$ 9,229.10</span>
+          </p>
         </div>
-        <hr />
-        <p id="result_total_container">
-          Ingreso NETO <br />
-          ($10,000.00 - $770.00) <span id="result_total">$ 9,229.10</span>
-        </p>
 
         <div class="generator-result_options">
           <button class="button tertiary" id="download-png">
