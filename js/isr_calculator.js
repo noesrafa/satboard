@@ -143,7 +143,11 @@ document.addEventListener("DOMContentLoaded", () => {
   salaryForm.addEventListener("submit", function (event) {
     event.preventDefault();
 
-    if (!generator_input.value || generator_input.value === "0") {
+    if (
+      !generator_input.value ||
+      generator_input.value === "0" ||
+      isNaN(generator_input.value)
+    ) {
       const error = document.createElement("p");
       error.classList.add("error");
       error.innerText = "Ingresa un sueldo válido";
@@ -165,7 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ========= DOWNLOAD RESULT =========== //
   const downloadButton = document.querySelector("#download-png");
-  const resultToDownload = document.querySelector(".generator-result__data")
+  const resultToDownload = document.querySelector(".generator-result__data");
 
   downloadButton.addEventListener("click", () => {
     htmlToImage.toPng(resultToDownload).then(function (dataUrl) {
@@ -197,10 +201,9 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     const element_result_total = document.querySelector("#result_total");
 
-    const salary = generator_input.value;
     const salary_type = salaried_type;
     const salary_periodicity = periodicity;
-    const salary_number = parseInt(salary.replace(/\D/g, ""));
+    const salary_number = generator_input.value;
 
     let base, marginal_tax, total_isr;
 
