@@ -2,7 +2,10 @@
   width: 100%;
   max-width: var(--max-w-sm);
   padding: 0 12px;
+  animation: fadeIn 0.5s ease;
 }
+
+
 
 .input-quantity {
   position: relative;
@@ -100,6 +103,8 @@
 .generator-result {
   width: 100%;
   max-width: var(--max-w-sm);
+  animation: fadeIn 0.5s ease;
+
   
 }
 
