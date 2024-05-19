@@ -272,9 +272,13 @@ input:checked + .slider:before {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-left: -46px;
   width: calc(100% - 32px);
   transition: 150ms;
+  height: 32px;
+}
+
+.main-header button {
+  margin-left: -46px;
 }
 
 .main-header h2 {
@@ -285,8 +289,8 @@ input:checked + .slider:before {
   display: block;
 }
 
-.main.full .main-header {
-  margin-left: 0px;
+.main.full .main-header button {
+  margin-left: 0;
 }
 
 .main-header .user-picture {
