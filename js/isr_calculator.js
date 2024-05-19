@@ -181,14 +181,6 @@ document.addEventListener("DOMContentLoaded", () => {
     generatorResult.classList.add("hidden");
   });
 
-  // ========= FORMAT NUMBER WHILE TYPING =========== //
-  generator_input.addEventListener("input", function (event) {
-    const value = event.target.value.replace(/\D/g, "");
-
-    event.target.value = new Intl.NumberFormat().format(value);
-   
-  });
-
   // ========= CALCULATE ISR =========== //
   const calculateISR = () => {
     const element_salary = document.querySelector("#result_salary");
