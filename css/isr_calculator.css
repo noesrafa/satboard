@@ -5,12 +5,24 @@
 }
 
 .input-quantity {
+  position: relative;
   display: flex;
   align-items: center;
   background: #ffffff0a;
   border-radius: 5px;
   padding: 8px;
   border-radius: 32px;
+}
+
+.input-quantity .error {
+  position: absolute;
+  top: -30px;
+  left: 0;
+  color: var(--error-color);
+}
+
+.input-quantity.error {
+  border: 1px solid var(--error-color);
 }
 
 .input-quantity input {
@@ -135,6 +147,11 @@
   flex-direction: column;
   gap: 12px;
   width: 100%;
+}
+
+.generator-detail > div > p > span {
+  color: var(--text-secondary-color);
+  font-weight: 400;
 }
 
 .generator-result_options {

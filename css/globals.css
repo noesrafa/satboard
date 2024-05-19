@@ -11,6 +11,7 @@
   --secondary-color: #000;
   --bg-color: #002c1f;
   --accent-color: #00261b;
+  --error-color: rgb(235, 124, 124);
 
   --max-w-sm: 640px;
   --max-w-md: 768px;

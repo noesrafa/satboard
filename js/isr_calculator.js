@@ -46,7 +46,7 @@ const createDropdown = (element, option_type) => {
     dropdown_item.value = option.value;
 
     dropdown_item.addEventListener("click", function () {
-      const newContent = document.createTextNode(option.label);
+      const newContent = document.createTextNode(option.value);
       element.replaceChild(newContent, element.firstChild);
 
       dropdown.remove();
@@ -142,6 +142,23 @@ document.addEventListener("DOMContentLoaded", () => {
   salaryForm.addEventListener("submit", function (event) {
     event.preventDefault();
 
+    if (!generator_input.value || generator_input.value === "0") {
+      const error = document.createElement("p");
+      error.classList.add("error");
+      error.innerText = "Ingresa un sueldo";
+      salaryForm.appendChild(error);
+      // input add error class
+      salaryForm.classList.add("error");
+
+      setTimeout(() => {
+        error.remove();
+        salaryForm.classList.remove("error");
+      }, 3000);
+      return;
+    }
+
+    calculateISR();
+
     generatorContainer.classList.add("hidden");
     generatorResult.classList.remove("hidden");
   });
@@ -164,4 +181,83 @@ document.addEventListener("DOMContentLoaded", () => {
     generatorContainer.classList.remove("hidden");
     generatorResult.classList.add("hidden");
   });
+
+  // ========= FORMAT NUMBER WHILE TYPING =========== //
+  generator_input.addEventListener("input", function (event) {
+    const value = event.target.value.replace(/\D/g, "");
+
+    event.target.value = new Intl.NumberFormat().format(value);
+   
+  });
+
+  // ========= CALCULATE ISR =========== //
+  const calculateISR = () => {
+    const element_salary = document.querySelector("#result_salary");
+    const result_total_isr = document.querySelector("#result_total_isr");
+    const result_taxes_container = document.querySelector(
+      "#result_taxes_container"
+    );
+    const element_result_marginal_tax = document.querySelector(
+      "#result_marginal_tax"
+    );
+    const element_fixed_fee = document.querySelector("#result_fixed_fee");
+    const element_result_total_container = document.querySelector(
+      "#result_total_container"
+    );
+    const element_result_total = document.querySelector("#result_total");
+
+    const salary = generator_input.value;
+    const salary_type = salaried_type;
+    const salary_periodicity = periodicity;
+    const salary_number = parseInt(salary.replace(/\D/g, ""));
+
+    let base, marginal_tax, total_isr;
+
+    ISR_LIMITS.forEach((limit) => {
+      if (
+        salary_number >= limit.inferior_limit &&
+        salary_number <= limit.superior_limit
+      ) {
+        base = salary_number - limit.inferior_limit;
+        marginal_tax = base * (limit.percentage / 100);
+        total_isr = marginal_tax + limit.fixed_fee;
+
+        console.log(base);
+
+        element_salary.innerText = `${formatCurrency(salary_number)}`;
+        result_total_isr.innerText = `- ${formatCurrency(total_isr)}`;
+        element_result_marginal_tax.innerText = `${formatCurrency(
+          marginal_tax
+        )}`;
+        element_fixed_fee.innerText = `${formatCurrency(limit.fixed_fee)}`;
+        element_result_total.innerText = `${formatCurrency(
+          salary_number - total_isr
+        )}`;
+
+        const marginal_tax_detail = document.createTextNode(
+          `(${formatCurrency(base)} x ${limit.percentage}%)`
+        );
+
+        result_taxes_container.replaceChild(
+          marginal_tax_detail,
+          result_taxes_container.childNodes[2]
+        );
+
+        const total_detail = document.createTextNode(
+          `${formatCurrency(salary_number)} - ${formatCurrency(total_isr)}`
+        );
+
+        element_result_total_container.replaceChild(
+          total_detail,
+          element_result_total_container.childNodes[2]
+        );
+      }
+    });
+  };
 });
+
+const formatCurrency = (value) => {
+  return `$ ${new Intl.NumberFormat().format(value)}${
+    Number.isInteger(value) ? ".00" : ""
+  }`;
+};
