@@ -36,7 +36,7 @@
           <img src="./assets/money.svg" alt="money" />
           <input
             id="generator-input"
-            type="text"
+            type="number"
             placeholder="Escribe el sueldo bruto del empleado"
           />
           <button type="submit" id="submit">
@@ -53,12 +53,18 @@
         <div class="generator-detail">
           <img src="./assets/detail-line.svg" alt="detail line" />
           <div>
-            <p>Impuesto marginal <br> ($3,667.95 x 10.88%) <span>$399.07</span></p>
+            <p>
+              Impuesto marginal <br />
+              ($3,667.95 x 10.88%) <span>$399.07</span>
+            </p>
             <p>Cuota fija <span>$371.83</span></p>
           </div>
         </div>
         <hr />
-        <p>Ingreso NETO <br> ($10,000.00 - $770.00) <span>$ 9,229.10</span></p>
+        <p>
+          Ingreso NETO <br />
+          ($10,000.00 - $770.00) <span>$ 9,229.10</span>
+        </p>
 
         <div class="generator-result_options">
           <button class="button tertiary" id="download-png">
@@ -81,6 +87,7 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
+    <script src="./js/consts.js"></script>
     <script src="./js/main.js"></script>
     <script src="./js/isr_calculator.js"></script>
   </body>

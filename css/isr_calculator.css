@@ -1,6 +1,6 @@
 .generator-container {
   width: 100%;
-  max-width: var(--max-w-md);
+  max-width: var(--max-w-sm);
   padding: 0 12px;
 }
 
@@ -29,8 +29,8 @@
 }
 
 .input-quantity img {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   cursor: pointer;
   padding: 7px;
   border-radius: 50%;
@@ -170,4 +170,28 @@
 
 .hidden {
   display: none;
+}
+
+.dropdown {
+  position: absolute;
+  background: var(--bg-color);
+  padding: 8px;
+  border: 1px solid var(--transparent-md);
+  border-radius: 10px;
+  margin-top: 6px;
+}
+
+.dropdown ul {
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdown ul li {
+  padding: 6px 12px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: 150ms;
+}
+.dropdown ul li:hover {
+  background: var(--transparent-md);
 }

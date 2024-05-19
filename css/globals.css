@@ -64,9 +64,20 @@ a {
   opacity: 0.4;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
 /* =============== BUTTONS =============== */
 .button {
-  padding: 10px 14px;
+  padding: 14px 14px;
   border-radius: 32px;
   display: flex;
   justify-content: center;

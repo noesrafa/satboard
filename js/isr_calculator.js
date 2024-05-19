@@ -2,29 +2,6 @@ const generator_options_container =
   document.querySelector(".generator-options");
 const generator_input = document.querySelector("#generator-input");
 
-const OPTIONS_KEYS = {
-  SALARIED_TYPE: "salaried_type",
-  REGIME: "regime",
-  PERIODICITY: "periodicity",
-};
-
-const SALARIED_TYPES = {
-  BRUTO: "Sueldo bruto",
-  NETO: "Sueldo neto",
-};
-
-const REGIMES = {
-  SYS: "Sueldos y Salarios",
-  HONORARIOS: "Honorarios",
-};
-
-const PERIODICITIES = {
-  MENSUAL: "Mensual",
-  QUINCENAL: "Quincenal",
-  SEMANAL: "Semanal",
-  DIA: "Día",
-};
-
 let salaried_type =
   localStorage.getItem("salaried_type") || SALARIED_TYPES.BRUTO;
 let regime = localStorage.getItem("regime") || REGIMES.SYS;
@@ -48,7 +25,52 @@ const generator_options_list = [
   },
 ];
 
+const createDropdown = (element, option_type) => {
+  const dropdown = document.createElement("div");
+  dropdown.classList.add("dropdown");
+  dropdown.style.top = `${element.offsetTop + element.offsetHeight}px`;
+  dropdown.style.left = `${element.offsetLeft}px`;
+
+  const dropdown_list = document.createElement("ul");
+  dropdown_list.classList.add("dropdown-list");
+
+  const options =
+    option_type.value === OPTIONS_KEYS.PERIODICITY
+      ? periodicities_options
+      : regimes_options;
+
+  options.forEach((option) => {
+    const dropdown_item = document.createElement("li");
+    dropdown_item.classList.add("dropdown-item");
+    dropdown_item.innerText = option.label;
+    dropdown_item.value = option.value;
+
+    dropdown_item.addEventListener("click", function () {
+      const newContent = document.createTextNode(option.label);
+      element.replaceChild(newContent, element.firstChild);
+
+      dropdown.remove();
+    });
+
+    dropdown_list.appendChild(dropdown_item);
+  });
+
+  dropdown.appendChild(dropdown_list);
+  document.body.appendChild(dropdown);
+
+  document.addEventListener("click", function (event) {
+    if (!dropdown.contains(event.target) && !element.contains(event.target)) {
+      dropdown.remove();
+    }
+  });
+};
+
 const handleOptionAction = (option, element) => {
+  document
+    .querySelectorAll(".dropdown")
+    .forEach((dropdown) => dropdown.remove());
+  createDropdown(element, option);
+
   switch (option.value) {
     case OPTIONS_KEYS.PERIODICITY:
       break;
@@ -72,7 +94,6 @@ const handleOptionAction = (option, element) => {
         salaried_type === SALARIED_TYPES.BRUTO ? "BRUTO" : "NETO"
       } del empleado`;
 
-      console.log(salaried_type);
       break;
     default:
       break;
