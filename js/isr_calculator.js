@@ -2,10 +2,9 @@ const generator_options_container =
   document.querySelector(".generator-options");
 const generator_input = document.querySelector("#generator-input");
 
-let salaried_type =
-  localStorage.getItem("salaried_type") || SALARIED_TYPES.BRUTO;
-let regime = localStorage.getItem("regime") || REGIMES.SYS;
-let periodicity = localStorage.getItem("periodicity") || PERIODICITIES.MENSUAL;
+let salaried_type = SALARIED_TYPES.BRUTO;
+let regime = REGIMES.SYS;
+let periodicity = PERIODICITIES.MENSUAL;
 
 const generator_options_list = [
   {
@@ -78,14 +77,11 @@ const handleOptionAction = (option, element) => {
       createDropdown(element, option);
       break;
     case OPTIONS_KEYS.SALARIED_TYPE:
-      salaried_type = localStorage.getItem(OPTIONS_KEYS.SALARIED_TYPE);
-
-      localStorage.setItem(
-        OPTIONS_KEYS.SALARIED_TYPE,
+      salaried_type =
         salaried_type === SALARIED_TYPES.BRUTO
           ? SALARIED_TYPES.NETO
-          : SALARIED_TYPES.BRUTO
-      );
+          : SALARIED_TYPES.BRUTO;
+
       element.querySelector("img").src =
         salaried_type === SALARIED_TYPES.BRUTO
           ? `./assets/checked.svg`
@@ -106,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const generatorResult = document.querySelector(".generator-result");
 
   generator_input.placeholder = `Escribe el sueldo ${
-    salaried_type === SALARIED_TYPES.BRUTO ? "NETO" : "BRUTO"
+    salaried_type === SALARIED_TYPES.NETO ? "NETO" : "BRUTO"
   } del empleado`;
 
   generator_options_list.forEach((option) => {
@@ -122,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
       option_button_icon.alt = "Caret down";
     } else {
       option_button_icon.src =
-        salaried_type === SALARIED_TYPES.BRUTO
+        salaried_type === SALARIED_TYPES.NETO
           ? `./assets/unchecked.svg`
           : `./assets/checked.svg`;
 
@@ -187,6 +183,94 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ========= CALCULATE ISR =========== //
   const calculateISR = () => {
+    const salary_type = salaried_type;
+    const salary_periodicity = periodicity;
+    const salary_number = generator_input.value;
+
+    let base, marginal_tax, total_isr, grossLimit;
+
+    function calculateNetSalary(grossSalary) {
+      ISR_LIMITS.forEach((limit) => {
+        if (
+          grossSalary >= limit.inferior_limit &&
+          grossSalary <= limit.superior_limit
+        ) {
+          base = grossSalary - limit.inferior_limit;
+          marginal_tax = base * (limit.percentage / 100);
+          total_isr = marginal_tax + limit.fixed_fee;
+        }
+      });
+
+      grossLimit = ISR_LIMITS.find(
+        (limit) =>
+          grossSalary >= limit.inferior_limit &&
+          grossSalary <= limit.superior_limit
+      );
+      return grossSalary - total_isr;
+    }
+
+    if (salaried_type === SALARIED_TYPES.NETO || !salary_type) {
+      function calculateGrossSalary(netSalary) {
+        let low = 0;
+        let high = 9999999999;
+        let mid;
+        let iterations = 0;
+        let precision = 0.01;
+
+        while (high - low > precision && iterations < 1000) {
+          mid = (low + high) / 2;
+          let calculatedNet = calculateNetSalary(mid);
+
+          if (calculatedNet < netSalary) {
+            low = mid;
+          } else {
+            high = mid;
+          }
+
+          iterations++;
+        }
+
+        return mid;
+      }
+
+      let grossSalary = calculateGrossSalary(salary_number);
+
+      assignValuesResult(
+        grossSalary.toFixed(2),
+        total_isr,
+        marginal_tax,
+        grossLimit,
+        base
+      );
+    } else {
+      ISR_LIMITS.forEach((limit) => {
+        if (
+          salary_number >= limit.inferior_limit &&
+          salary_number <= limit.superior_limit
+        ) {
+          base = salary_number - limit.inferior_limit;
+          marginal_tax = base * (limit.percentage / 100);
+          total_isr = marginal_tax + limit.fixed_fee;
+
+          assignValuesResult(
+            salary_number,
+            total_isr,
+            marginal_tax,
+            limit,
+            base
+          );
+        }
+      });
+    }
+  };
+
+  const assignValuesResult = (
+    salary_number,
+    total_isr,
+    marginal_tax,
+    limit,
+    base
+  ) => {
     const element_salary = document.querySelector("#result_salary");
     const result_total_isr = document.querySelector("#result_total_isr");
     const result_taxes_container = document.querySelector(
@@ -201,50 +285,31 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     const element_result_total = document.querySelector("#result_total");
 
-    const salary_type = salaried_type;
-    const salary_periodicity = periodicity;
-    const salary_number = generator_input.value;
+    element_salary.innerText = `${formatCurrency(salary_number)}`;
+    result_total_isr.innerText = `- ${formatCurrency(total_isr)}`;
+    element_result_marginal_tax.innerText = `${formatCurrency(marginal_tax)}`;
+    element_fixed_fee.innerText = `${formatCurrency(limit.fixed_fee)}`;
+    element_result_total.innerText = `${formatCurrency(
+      salary_number - total_isr
+    )}`;
 
-    let base, marginal_tax, total_isr;
+    const marginal_tax_detail = document.createTextNode(
+      `(${formatCurrency(base)} x ${limit.percentage}%)`
+    );
 
-    ISR_LIMITS.forEach((limit) => {
-      if (
-        salary_number >= limit.inferior_limit &&
-        salary_number <= limit.superior_limit
-      ) {
-        base = salary_number - limit.inferior_limit;
-        marginal_tax = base * (limit.percentage / 100);
-        total_isr = marginal_tax + limit.fixed_fee;
+    result_taxes_container.replaceChild(
+      marginal_tax_detail,
+      result_taxes_container.childNodes[2]
+    );
 
-        element_salary.innerText = `${formatCurrency(salary_number)}`;
-        result_total_isr.innerText = `- ${formatCurrency(total_isr)}`;
-        element_result_marginal_tax.innerText = `${formatCurrency(
-          marginal_tax
-        )}`;
-        element_fixed_fee.innerText = `${formatCurrency(limit.fixed_fee)}`;
-        element_result_total.innerText = `${formatCurrency(
-          salary_number - total_isr
-        )}`;
+    const total_detail = document.createTextNode(
+      `${formatCurrency(salary_number)} - ${formatCurrency(total_isr)}`
+    );
 
-        const marginal_tax_detail = document.createTextNode(
-          `(${formatCurrency(base)} x ${limit.percentage}%)`
-        );
-
-        result_taxes_container.replaceChild(
-          marginal_tax_detail,
-          result_taxes_container.childNodes[2]
-        );
-
-        const total_detail = document.createTextNode(
-          `${formatCurrency(salary_number)} - ${formatCurrency(total_isr)}`
-        );
-
-        element_result_total_container.replaceChild(
-          total_detail,
-          element_result_total_container.childNodes[2]
-        );
-      }
-    });
+    element_result_total_container.replaceChild(
+      total_detail,
+      element_result_total_container.childNodes[2]
+    );
   };
 });
 
