@@ -13,11 +13,6 @@ const generator_options_list = [
     type: "selector",
   },
   {
-    label: periodicity,
-    value: "periodicity",
-    type: "selector",
-  },
-  {
     label: "Sueldo BRUTO",
     value: "salaried_type",
     type: "toggle",
@@ -48,18 +43,28 @@ const createDropdown = (element, option_type) => {
       const newContent = document.createTextNode(option.value);
       element.replaceChild(newContent, element.firstChild);
 
+      if (option_type.value === OPTIONS_KEYS.PERIODICITY) {
+        periodicity = option.value;
+      }
+      if (option_type.value === OPTIONS_KEYS.REGIME) {
+        regime = option.value;
+      }
+
       dropdown.remove();
+      element.classList.remove("active");
     });
 
     dropdown_list.appendChild(dropdown_item);
   });
 
   dropdown.appendChild(dropdown_list);
-  document.body.appendChild(dropdown);
+  element.appendChild(dropdown);
+  element.classList.add("active");
 
   document.addEventListener("click", function (event) {
     if (!dropdown.contains(event.target) && !element.contains(event.target)) {
       dropdown.remove();
+      element.classList.remove("active");
     }
   });
 };
@@ -70,9 +75,6 @@ const handleOptionAction = (option, element) => {
     .forEach((dropdown) => dropdown.remove());
 
   switch (option.value) {
-    case OPTIONS_KEYS.PERIODICITY:
-      createDropdown(element, option);
-      break;
     case OPTIONS_KEYS.REGIME:
       createDropdown(element, option);
       break;
@@ -133,7 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
     generator_options_container.appendChild(option_button);
   });
 
-  // ========= CALCULATE ISR =========== //
+  // ========= ON SUBMIT =========== //
   const salaryForm = document.querySelector("#salary-form");
 
   salaryForm.addEventListener("submit", function (event) {
@@ -184,10 +186,17 @@ document.addEventListener("DOMContentLoaded", () => {
   // ========= CALCULATE ISR =========== //
   const calculateISR = () => {
     const salary_type = salaried_type;
-    const salary_periodicity = periodicity;
     const salary_number = generator_input.value;
 
-    let base, marginal_tax, total_isr, grossLimit;
+    let base, marginal_tax, total_isr, grossLimit, subsidy;
+
+    function calculateSubsidy(grossSalary) {
+      if (grossSalary <= SUBSIDY_INFO.limit && regime === REGIMES.SYS) {
+        return SUBSIDY_INFO.total_subsidy;
+      }
+
+      return 0;
+    }
 
     function calculateNetSalary(grossSalary) {
       ISR_LIMITS.forEach((limit) => {
@@ -234,13 +243,15 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       let grossSalary = calculateGrossSalary(salary_number);
+      subsidy = calculateSubsidy(grossSalary);
 
       assignValuesResult(
         grossSalary.toFixed(2),
         total_isr,
         marginal_tax,
         grossLimit,
-        base
+        base,
+        subsidy
       );
     } else {
       ISR_LIMITS.forEach((limit) => {
@@ -251,13 +262,15 @@ document.addEventListener("DOMContentLoaded", () => {
           base = salary_number - limit.inferior_limit;
           marginal_tax = base * (limit.percentage / 100);
           total_isr = marginal_tax + limit.fixed_fee;
+          subsidy = calculateSubsidy(salary_number);
 
           assignValuesResult(
             salary_number,
             total_isr,
             marginal_tax,
             limit,
-            base
+            base,
+            subsidy
           );
         }
       });
@@ -269,8 +282,10 @@ document.addEventListener("DOMContentLoaded", () => {
     total_isr,
     marginal_tax,
     limit,
-    base
+    base,
+    subsidy
   ) => {
+    const result_subsidy = document.querySelector("#result_subsidy");
     const element_salary = document.querySelector("#result_salary");
     const result_total_isr = document.querySelector("#result_total_isr");
     const result_taxes_container = document.querySelector(
@@ -290,7 +305,7 @@ document.addEventListener("DOMContentLoaded", () => {
     element_result_marginal_tax.innerText = `${formatCurrency(marginal_tax)}`;
     element_fixed_fee.innerText = `${formatCurrency(limit.fixed_fee)}`;
     element_result_total.innerText = `${formatCurrency(
-      salary_number - total_isr
+      salary_number - total_isr + (subsidy ? subsidy : 0)
     )}`;
 
     const marginal_tax_detail = document.createTextNode(
@@ -302,14 +317,13 @@ document.addEventListener("DOMContentLoaded", () => {
       result_taxes_container.childNodes[2]
     );
 
-    const total_detail = document.createTextNode(
-      `${formatCurrency(salary_number)} - ${formatCurrency(total_isr)}`
-    );
-
-    element_result_total_container.replaceChild(
-      total_detail,
-      element_result_total_container.childNodes[2]
-    );
+    if (subsidy) {
+      result_subsidy.innerHTML = `Subsidio: <span> + ${formatCurrency(
+        subsidy
+      )}</span>`;
+    } else {
+      result_subsidy.innerHTML = "";
+    }
   };
 });
 

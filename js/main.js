@@ -52,15 +52,9 @@ document.addEventListener("DOMContentLoaded", () => {
     current_nav.classList.add("active");
   }
 
-  // =========== ADD A RANDOM USER =========== //
-  const getRandomUser = async () => {
-    const response = await fetch("https://randomuser.me/api/");
-    const data = await response.json();
-    return data.results[0];
-  };
-
-  getRandomUser().then((user) => {
-    const userPictureUrl = user?.picture?.medium
+  const assignUserProfile = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const userPictureUrl = user?.picture?.medium;
 
     const userImg = document.createElement("img");
     userImg.src = userPictureUrl;
@@ -68,6 +62,23 @@ document.addEventListener("DOMContentLoaded", () => {
     userImg.classList.add("user-picture");
 
     mainHeader.appendChild(userImg);
+  };
+
+  // =========== ADD A RANDOM USER =========== //
+  if (localStorage.getItem("user")) {
+    assignUserProfile();
+    return;
+  }
+
+  const getRandomUser = async () => {
+    const response = await fetch("https://randomuser.me/api/");
+    const data = await response.json();
+
+    localStorage.setItem("user", JSON.stringify(data.results[0]));
+  };
+
+  getRandomUser().then(() => {
+    assignUserProfile();
   });
 });
 

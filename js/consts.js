@@ -118,3 +118,11 @@ const ISR_LIMITS = [
     percentage: 35,
   },
 ];
+
+const SUBSIDY_INFO = {
+  limit: 9081,
+  daily_uma: 106.57,
+  monthly_uma: 3300.53,
+  fixed_fee: 11.82,
+  total_subsidy: 390.12,
+};

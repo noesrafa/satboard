@@ -5,8 +5,6 @@
   animation: fadeIn 0.5s ease;
 }
 
-
-
 .input-quantity {
   position: relative;
   display: flex;
@@ -83,7 +81,13 @@
 
 .generator-options button:hover {
   color: white;
-  background: #ffffff0e;
+  background: var(--transparent-md);
+
+}
+
+.generator-options button.active {
+  color: white;
+  background: var(--transparent-md);
 }
 
 @media (max-width: 768px) {
@@ -104,8 +108,6 @@
   width: 100%;
   max-width: var(--max-w-sm);
   animation: fadeIn 0.5s ease;
-
-  
 }
 
 .generator-result__data {
@@ -115,7 +117,6 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-
 }
 
 .generator-result br {
@@ -219,6 +220,7 @@
   cursor: pointer;
   border-radius: 8px;
   transition: 150ms;
+  text-align: left;
 }
 .dropdown ul li:hover {
   background: var(--transparent-md);
